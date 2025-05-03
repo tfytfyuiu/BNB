@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>حزم BNB</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  min-height: 100vh;
+  background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+  overflow-y: auto;
+  position: relative;
+}
+.container {
+  width: 100%;
+  max-width: 900px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
+}
+.box {
+  flex: 1;
+  min-width: 220px;
+  max-width: 280px;
+  height: 340px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+.box:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(76, 175, 80, 0.2);
+}
+.box::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+.box:hover::before {
+  opacity: 0.8;
+}
+.box.monthly::before {
+  background-image: url('https://www.raed.net/img?id=1283581');
+}
+.box.six-months::before {
+  background-image: url('https://www.raed.net/img?id=1283581');
+}
+.box.yearly::before {
+  background-image: url('https://www.raed.net/img?id=1283581');
+}
+.box-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+.uc-amount {
+  color: #ffd700;
+  font-size: 22px;
+  font-weight: 700;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+  margin-bottom: 10px;
+  padding-top: 20px;
+}
+.price-label {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #4CAF50 0%, #2e7d32 100%);
+  padding: 10px 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+  transition: transform 0.3s ease;
+  margin-bottom: 20px;
+}
+.box:hover .price-label {
+  transform: scale(1.05);
+}
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  overflow: auto;
+  animation: fadeIn 0.4s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.modal-content {
+  background: linear-gradient(135deg, #ffffff 0%, #e8f0fe 100%);
+  margin: 10% auto;
+  padding: 30px;
+  border-radius: 25px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  direction: rtl;
+  position: relative;
+  animation: slideUp 0.4s ease forwards;
+}
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.close {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  color: #444;
+  font-size: 34px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.close:hover {
+  color: #000;
+  transform: rotate(180deg);
+}
+h2 {
+  color: #1a1a2e;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+.payment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.payment-option {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  border: 2px solid #ddd;
+  border-radius: 15px;
+  background: #fff;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+.payment-option:hover {
+  border-color: #4CAF50;
+  transform: translateX(5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+.payment-option img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+.payment-option:hover img {
+  transform: scale(1.1);
+}
+.option-text {
+  font-size: 18px;
+  color: #1a1a2e;
+  font-weight: 500;
+}
+.input-field {
+  width: 100%;
+  padding: 14px;
+  margin: 15px 0;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  font-size: 16px;
+  direction: ltr;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+.input-field:focus {
+  border-color: #4CAF50;
+  outline: none;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+.error-message {
+  color: #ff4444;
+  font-size: 14px;
+  margin-top: 5px;
+  display: none;
+  text-align: right;
+}
+.continue-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #4CAF50 0%, #2e7d32 100%);
+  color: #fff;
+  border: none;
+  border-radius: 15px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+.continue-btn:hover {
+  background: linear-gradient(135deg, #2e7d32 0%, #4CAF50 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.6);
+}
+.glow-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(76, 175, 80, 0.1) 0%, transparent 70%);
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+}
+.payment-action {
+  display: none;
+  margin-top: 20px;
+  text-align: center;
+}
+.payment-action a {
+  display: inline-block;
+  padding: 12px 25px;
+  background: linear-gradient(135deg, #4CAF50 0%, #2e7d32 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+.payment-action a:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+.vodafone-number {
+  font-size: 22px;
+  font-weight: bold;
+  color: #e60000;
+  margin: 15px 0;
+}
+@media (max-width: 480px) {
+  .box {
+    min-width: 180px;
+    height: 300px;
+  }
+  .uc-amount {
+    font-size: 20px;
+  }
+  .price-label {
+    font-size: 16px;
+  }
+  .modal-content {
+    width: 95%;
+    padding: 20px;
+  }
+  .payment-option img {
+    width: 60px;
+    height: 60px;
+  }
+  .payment-option {
+    gap: 15px;
+    padding: 15px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="glow-effect"></div>
+<div class="container">
+  <div class="row">
+    <div class="box monthly">
+      <div class="box-content">
+        <div class="uc-amount">باقة المستخدم الشهري</div>
+        <div class="price-label">15 جنيه</div>
+      </div>
+    </div>
+    <div class="box six-months">
+      <div class="box-content">
+        <div class="uc-amount">*باقة 6 شهور *رجل أعمال</div>
+        <div class="price-label">50 جنيه</div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="box yearly">
+      <div class="box-content">
+        <div class="uc-amount"> *باقة السنوي *رائد اعمال</div>
+        <div class="price-label">75 جنيه</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- طريقة الدفع -->
+<div id="paymentModal" class="modal">
+  <div class="modal-content">
+    <span class="close">×</span>
+    <h2>اختر وسيلة الدفع</h2>
+    <input type="tel" id="pubgId" class="input-field" placeholder="ادخل رقم هاتفك المسجل بالتطبيق" required>
+    <div class="error-message" id="idError">الرجاء التسجيل رقم هاتف صحيح (مثال: 010xxxxxxxxxx)</div>
+    
+    <div class="payment-options">
+      <label class="payment-option">
+        <input type="radio" name="payment" value="instapay">
+        <img src="https://www.raed.net/img?id=1283583" alt="InstaPay">
+        <span class="option-text">انستا باي</span>
+      </label>
+      
+      <label class="payment-option">
+        <input type="radio" name="payment" value="ewallet">
+        <img src="https://www.raed.net/img?id=1283584" alt="Vodafone Cash">
+        <span class="option-text">فودافون كاش</span>
+      </label>
+    </div>
+    
+    <!-- زر إجراء الدفع لانستا باي -->
+    <div id="instapayAction" class="payment-action">
+      <a href="https://ipn.eg/S/adelezaat8000/instapay/7bsz5E" target="_blank">إجراء الدفع عبر انستا باي</a>
+    </div>
+    
+    <!-- رقم فودافون كاش -->
+    <div id="vodafoneAction" class="payment-action">
+      <div class="vodafone-number">01000072951</div>
+      <p>يرجى التحويل على هذا الرقم ثم الضغط علي المتابعة برجاء الاحتفاظ بصورة عملية التحويل </p>
+    </div>
+    
+    <button id="continueBtn" class="continue-btn">متابعة</button>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const boxes = document.querySelectorAll('.box');
+  const modal = document.getElementById('paymentModal');
+  const closeBtn = document.querySelector('.close');
+  const continueBtn = document.getElementById('continueBtn');
+  const instapayAction = document.getElementById('instapayAction');
+  const vodafoneAction = document.getElementById('vodafoneAction');
+  const paymentOptions = document.querySelectorAll('input[name="payment"]');
+  
+  let selectedPackage = '';
+  
+  boxes.forEach(box => {
+    box.addEventListener('click', function() {
+      modal.style.display = 'block';
+      const ucAmount = box.querySelector('.uc-amount').textContent;
+      const price = box.querySelector('.price-label').textContent;
+      selectedPackage = `${ucAmount} ${price}`.trim();
+    });
+  });
+  
+  closeBtn.addEventListener('click', function() {
+    modal.style.display = 'none';
+  });
+  
+  window.addEventListener('click', function(event) {
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+  
+  // عند تغيير وسيلة الدفع
+  paymentOptions.forEach(option => {
+    option.addEventListener('change', function() {
+      if (this.value === 'instapay') {
+        instapayAction.style.display = 'block';
+        vodafoneAction.style.display = 'none';
+      } else if (this.value === 'ewallet') {
+        instapayAction.style.display = 'none';
+        vodafoneAction.style.display = 'block';
+      } else {
+        instapayAction.style.display = 'none';
+        vodafoneAction.style.display = 'none';
+      }
+    });
+  });
+  
+  continueBtn.addEventListener('click', function() {
+    const selectedPayment = document.querySelector('input[name="payment"]:checked');
+    const pubgId = document.getElementById('pubgId').value.trim();
+    const idError = document.getElementById('idError');
+    const phonePattern = /^01[0-2|5]{1}[0-9]{8}$/;
+    
+    if (!phonePattern.test(pubgId)) {
+      idError.style.display = 'block';
+      return;
+    } else {
+      idError.style.display = 'none';
+    }
+    
+    if (!selectedPayment) {
+      alert('الرجاء اختيار وسيلة دفع');
+      return;
+    }
+    
+    const paymentMethod = selectedPayment.value === 'instapay' ? 'انستا باي' : 'فودافون كاش';
+    const message = `مرحباً، أود BNB:\n${selectedPackage}\nرقم هاتفي: ${pubgId}\nوسيلة الدفع: ${paymentMethod}`;
+    const whatsappNumber = '+201000072951';
+    const whatsappUrl = `https://wa.me/${whatsappNumber.replace('+', '')}?text=${encodeURIComponent(message)}`;
+    
+    window.open(whatsappUrl, '_blank');
+    modal.style.display = 'none';
+  });
+});
+</script>
+</body>
+</html>
