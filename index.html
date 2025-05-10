@@ -36,6 +36,19 @@
     .box:hover::before {
       opacity: 0.8;
     }
+    #countdownTimer {
+      font-family: 'Arial', sans-serif;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ffffff;
+      background: linear-gradient(to right, #ef4444, #dc2626);
+      padding: 0.5rem 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      margin-top: 1rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
   </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-900 to-slate-800 flex items-center justify-center p-4 overflow-y-auto">
@@ -99,14 +112,15 @@
         </div>
         <div id="vodafoneAction" class="payment-action hidden mt-6 text-center">
           <p class="text-xl font-bold text-red-600">01000072951</p>
-          <p class="text-sm text-gray-600 mt-2">يرجى التحويل على هذا الرقم ثم إدخال رقم الهاتف المحول منه والضغط على المتابعة. برجاء الاحتفاظ بصورة عملية التحويل</p>
+          <div id="countdownTimer" class="hidden">03:00</div>
+          <p class="text-sm text-gray-600 mt-2">يرجى التحويل على هذا الرقم ثم إدخال رقم الهاتف المحول منه. بعد الضغط على متابعة، ستتم إعادة توجيهك إلى واتساب لإرسال التفاصيل. <span class="font-bold text-red-600">يرجى إرسال صورة إيصال التحويل في الواتساب بعد فتح المحادثة.</span></p>
           <input
             type="tel"
             id="transferPhone"
             class="w-full p-3 border-2 border-gray-300 rounded-xl text-lg focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200 transition-all mt-4"
             placeholder="ادخل رقم الهاتف المحول منه"
           >
-          <div id="transferPhoneError" class="error-message text-red-500 text-sm text-right mt-2 hidden">الرجاء إدخال رقم هاتف صحيح (مثال: 010xxxxxxxxxx)</ поднимается</div>
+          <div id="transferPhoneError" class="error-message text-red-500 text-sm text-right mt-2 hidden">الرجاء إدخال رقم هاتف صحيح (مثال: 010xxxxxxxxxx)</div>
         </div>
 
         <button
@@ -132,8 +146,36 @@
       const idError = document.getElementById('idError');
       const transferPhone = document.getElementById('transferPhone');
       const transferPhoneError = document.getElementById('transferPhoneError');
+      const countdownTimer = document.getElementById('countdownTimer');
 
       let selectedPackage = '';
+      let timerInterval = null;
+
+      function startCountdown() {
+        clearInterval(timerInterval);
+        let timeLeft = 3 * 60; // 3 minutes in seconds
+        countdownTimer.classList.remove('hidden');
+
+        timerInterval = setInterval(() => {
+          let minutes = Math.floor(timeLeft / 60);
+          let seconds = timeLeft % 60;
+          countdownTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+          timeLeft--;
+
+          if (timeLeft < 0) {
+            clearInterval(timerInterval);
+            countdownTimer.textContent = 'انتهى الوقت';
+            continueBtn.disabled = true;
+          }
+        }, 1000);
+      }
+
+      function resetCountdown() {
+        clearInterval(timerInterval);
+        countdownTimer.classList.add('hidden');
+        countdownTimer.textContent = '03:00';
+        continueBtn.disabled = false;
+      }
 
       boxes.forEach(box => {
         box.addEventListener('click', () => {
@@ -161,12 +203,15 @@
           if (option.value === 'instapay') {
             instapayAction.classList.remove('hidden');
             vodafoneAction.classList.add('hidden');
+            resetCountdown();
           } else if (option.value === 'ewallet') {
             instapayAction.classList.add('hidden');
             vodafoneAction.classList.remove('hidden');
+            startCountdown();
           } else {
             instapayAction.classList.add('hidden');
             vodafoneAction.classList.add('hidden');
+            resetCountdown();
           }
         });
       });
@@ -203,7 +248,7 @@
         const paymentMethod = selectedPayment.value === 'instapay' ? 'انستا باي' : 'فودافون كاش';
         let message = `مرحباً، أود BNB:\n${selectedPackage}\nرقم هاتفي: ${phoneNumber}\nوسيلة الدفع: ${paymentMethod}`;
         if (selectedPayment.value === 'ewallet') {
-          message += `\nرقم الهاتف المحول منه: ${transferPhoneNumber}`;
+          message += `\nرقم الهاتف المحول منه: ${transferPhoneNumber}\n⚠️ `;
         }
         const whatsappUrl = `https://wa.me/+201000072951?text=${encodeURIComponent(message)}`;
 
@@ -224,6 +269,7 @@
         paymentOptions.forEach(option => (option.checked = false));
         continueBtn.disabled = false;
         continueBtn.textContent = 'متابعة';
+        resetCountdown();
       }
     });
   </script>
