@@ -1,277 +1,1181 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>حزم BNB</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes slideUp {
-      from { transform: translateY(50px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    .modal {
-      animation: fadeIn 0.4s ease;
-    }
-    .modal-content {
-      animation: slideUp 0.4s ease forwards;
-    }
-    .box::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 80%;
-      height: 80%;
-      background: url('https://www.raed.net/img?id=1283581') no-repeat center/contain;
-      opacity: 0.5;
-      transition: opacity 0.4s ease;
-      z-index: 0;
-    }
-    .box:hover::before {
-      opacity: 0.8;
-    }
-    #countdownTimer {
-      font-family: 'Arial', sans-serif;
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #ffffff;
-      background: linear-gradient(to right, #ef4444, #dc2626);
-      padding: 0.5rem 1rem;
-      border-radius: 0.75rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-      margin-top: 1rem;
-      text-align: center;
-      transition: all 0.3s ease;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختيار الباقة المثالية</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6fdc;
+            --secondary-color: #3a56b1;
+            --accent-color: #ff7043;
+            --light-color: #f8f9fa;
+            --dark-color: #2c3e50;
+            --success-color: #28a745;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            font-family: 'Tajawal', sans-serif;
+            color: var(--dark-color);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 60px 0;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .package-card {
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: none;
+            overflow: hidden;
+            margin-bottom: 30px;
+            background-color: white;
+        }
+        
+        .package-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .package-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(255, 112, 67, 0.3);
+            z-index: 1;
+        }
+        
+        .recommended-badge {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background-color: var(--success-color);
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+            z-index: 1;
+        }
+        
+        .package-price {
+            font-size: 42px;
+            font-weight: 700;
+            margin: 15px 0;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .package-price::before {
+            content: "جنيه";
+            font-size: 18px;
+            position: absolute;
+            top: 10px;
+            right: -25px;
+        }
+        
+        .package-features {
+            padding: 0;
+            list-style: none;
+            margin: 20px 0;
+        }
+        
+        .package-features li {
+            padding: 12px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        
+        .package-features li:hover {
+            background-color: #f9f9f9;
+            transform: translateX(5px);
+        }
+        
+        .package-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-icon {
+            margin-left: 12px;
+            color: var(--primary-color);
+            font-size: 18px;
+        }
+        
+        .btn-select {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            border-radius: 30px;
+            padding: 12px 30px;
+            font-weight: 600;
+            margin: 20px auto;
+            width: 80%;
+            display: block;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(74, 111, 220, 0.3);
+        }
+        
+        .btn-select:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(74, 111, 220, 0.4);
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+        }
+        
+        .search-container {
+            margin-bottom: 40px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .filter-buttons .btn {
+            margin-left: 10px;
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .filter-buttons .btn.active {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+        
+        .no-packages {
+            text-align: center;
+            padding: 60px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin: 30px 0;
+        }
+        
+        .comparison-table {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin: 40px 0;
+        }
+        
+        .comparison-table th {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+        
+        .comparison-table td {
+            padding: 12px 15px;
+            text-align: center;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .comparison-table .feature-name {
+            text-align: right;
+            font-weight: 500;
+        }
+        
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 6px 20px rgba(74, 111, 220, 0.3);
+            z-index: 1000;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .floating-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1100;
+        }
+
+        .payment-option {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-option:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(74, 111, 220, 0.05);
+        }
+        
+        .payment-option.active {
+            border-color: var(--primary-color);
+            background-color: rgba(74, 111, 220, 0.1);
+        }
+        
+        .payment-option input[type="radio"] {
+            margin-left: 10px;
+        }
+        
+        .receipt-upload {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .receipt-upload:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .receipt-preview {
+            max-width: 100%;
+            max-height: 200px;
+            display: none;
+            margin-top: 15px;
+            border-radius: 10px;
+        }
+        
+        .wallet-details {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .payment-details {
+            display: none;
+        }
+
+        .instapay-btn {
+            background: linear-gradient(135deg, var(--accent-color) 0%, #e65c00 100%);
+            border: none;
+            border-radius: 30px;
+            padding: 12px 30px;
+            font-weight: 600;
+            margin: 20px auto;
+            width: 80%;
+            display: block;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 112, 67, 0.3);
+            color: white;
+        }
+
+        .instapay-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 112, 67, 0.4);
+            background: linear-gradient(135deg, #e65c00 0%, var(--accent-color) 100%);
+        }
+
+        .wallet-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .wallet-instructions {
+            border: 1px solid #eee;
+            background-color: #f9f9f9;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .wallet-number-display {
+            color: var(--primary-color);
+            background-color: rgba(74, 111, 220, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 40px 0;
+                border-radius: 0;
+            }
+            
+            .package-price {
+                font-size: 36px;
+            }
+            
+            .package-features li {
+                padding: 10px 15px;
+            }
+            
+            .btn-select {
+                width: 90%;
+            }
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-gray-900 to-slate-800 flex items-center justify-center p-4 overflow-y-auto">
-  <div class="container w-full max-w-4xl flex flex-col gap-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="box monthly relative bg-white/5 rounded-3xl border border-white/15 p-6 flex flex-col items-center justify-between h-80 cursor-pointer transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-green-500/20">
-        <div class="relative z-10 text-center flex flex-col justify-between h-full">
-          <h3 class="text-yellow-400 text-xl font-bold drop-shadow-lg">باقة المستخدم الشهري</h3>
-          <p class="text-white text-lg font-semibold bg-gradient-to-r from-green-500 to-green-700 px-6 py-2 rounded-xl shadow-lg mt-4 hover:scale-105 transition-transform">15 جنيه</p>
+<body>
+    <!-- قسم البطل -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-5 fw-bold mb-3">اختر الباقة المثالية لاحتياجاتك</h1>
+                    <p class="lead mb-4">لدينا مجموعة متنوعة من الباقات المصممة خصيصًا لتلبي جميع متطلباتك. اختر ما يناسبك وابدأ رحلتك اليوم!</p>
+                </div>
+                <div class="col-md-4 text-start">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/admin-7fbae.appspot.com/o/app%2F162835.png?alt=media&token=16904f83-f0db-4b3e-b750-5deb6a35689f" alt="صورة الباقات" class="img-fluid rounded" style="box-shadow: 0 10px 20px rgba(0, 255, 0, 0.1);">
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="box six-months relative bg-white/5 rounded-3xl border border-white/15 p-6 flex flex-col items-center justify-between h-80 cursor-pointer transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-green-500/20">
-        <div class="relative z-10 text-center flex flex-col justify-between h-full">
-          <h3 class="text-yellow-400 text-xl font-bold drop-shadow-lg">*باقة 6 شهور *رجل أعمال</h3>
-          <p class="text-white text-lg font-semibold bg-gradient-to-r from-green-500 to-green-700 px-6 py-2 rounded-xl shadow-lg mt-4 hover:scale-105 transition-transform">50 جنيه</p>
+    </section>
+
+    <div class="container">
+        <!-- شريط البحث والتصفية -->
+        <div class="search-container">
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" id="searchInput" placeholder="ابحث عن الباقة...">
+                        <button class="btn btn-primary btn-lg" id="searchBtn">
+                            <i class="fas fa-search me-1"></i> بحث
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-6 text-start">
+                    <div class="filter-buttons">
+                        <span class="me-2 fw-bold">تصفية حسب:</span>
+                        <button class="btn btn-outline-primary filter-btn active" data-filter="all">الكل</button>
+                        <button class="btn btn-outline-primary filter-btn" data-filter="low">الأقل سعراً</button>
+                        <button class="btn btn-outline-primary filter-btn" data-filter="high">الأعلى سعراً</button>
+                        <button class="btn btn-outline-primary filter-btn" data-filter="recommended">موصى بها</button>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="box yearly relative bg-white/5 rounded-3xl border border-white/15 p-6 flex flex-col items-center justify-between h-80 cursor-pointer transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-green-500/20">
-        <div class="relative z-10 text-center flex flex-col justify-between h-full">
-          <h3 class="text-yellow-400 text-xl font-bold drop-shadow-lg">*باقة السنوي *رائد اعمال</h3>
-          <p class="text-white text-lg font-semibold bg-gradient-to-r from-green-500 to-green-700 px-6 py-2 rounded-xl shadow-lg mt-4 hover:scale-105 transition-transform">75 جنيه</p>
+        
+        <!-- خيار عرض الباقات -->
+        <div class="d-flex justify-content-end mb-3">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary active" id="viewCards">
+                    <i class="fas fa-th-large me-1"></i> بطاقات
+                </button>
+                <button type="button" class="btn btn-outline-primary" id="viewTable">
+                    <i class="fas fa-table me-1"></i> جدول مقارنة
+                </button>
+            </div>
         </div>
-      </div>
+        
+        <!-- عرض الباقات كبطاقات -->
+        <div class="row" id="cardsView">
+            <!-- الباقات سيتم عرضها هنا -->
+            <div class="no-packages" id="noPackagesMessage">
+                <i class="fas fa-box-open fa-3x mb-3" style="color: #ccc;"></i>
+                <h3>لا توجد باقات متاحة حالياً</h3>
+                <p class="text-muted">الرجاء العودة لاحقاً</p>
+            </div>
+        </div>
+        
+        <!-- عرض الباقات كجدول مقارنة -->
+        <div class="comparison-table" id="tableView" style="display: none;">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>الميزة</th>
+                        <!-- عناوين الباقات سيتم إضافتها هنا بالجافاسكريبت -->
+                    </tr>
+                </thead>
+                <tbody id="comparisonTableBody">
+                    <!-- بيانات المقارنة سيتم إضافتها هنا بالجافاسكريبت -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- طريقة الدفع -->
-    <div id="paymentModal" class="modal hidden fixed inset-0 bg-black bg-opacity-90 z-50 overflow-auto">
-      <div class="modal-content bg-gradient-to-br from-white to-blue-50 m-[10%_auto] p-8 rounded-3xl w-full max-w-md shadow-2xl relative">
-        <span class="close absolute left-4 top-4 text-3xl font-bold text-gray-600 cursor-pointer hover:text-black hover:rotate-180 transition-all">×</span>
-        <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">اختر وسيلة الدفع</h2>
-        <input
-          type="tel"
-          id="pubgId"
-          class="w-full p-3 border-2 border-gray-300 rounded-xl text-lg focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200 transition-all mb-4"
-          placeholder="ادخل رقم هاتفك المسجل بالتطبيق"
-          required
-        >
-        <div id="idError" class="error-message text-red-500 text-sm text-right mb-4 hidden">الرجاء إدخال رقم هاتف صحيح (مثال: 010xxxxxxxxxx)</div>
-
-        <div class="payment-options flex flex-col gap-4">
-          <label class="payment-option flex items-center gap-4 p-4 border-2 border-gray-200 rounded-xl bg-white hover:border-green-500 hover:translate-x-1 transition-all cursor-pointer">
-            <input type="radio" name="payment" value="instapay" class="w-5 h-5 text-green-500">
-            <img src="https://www.raed.net/img?id=1283583" alt="InstaPay" class="w-16 h-16 object-contain transition-transform hover:scale-110">
-            <span class="option-text text-lg font-medium text-gray-800">انستا باي</span>
-          </label>
-          <label class="payment-option flex items-center gap-4 p-4 border-2 border-gray-200 rounded-xl bg-white hover:border-green-500 hover:translate-x-1 transition-all cursor-pointer">
-            <input type="radio" name="payment" value="ewallet" class="w-5 h-5 text-green-500">
-            <img src="https://www.raed.net/img?id=1283584" alt="Vodafone Cash" class="w-16 h-16 object-contain transition-transform hover:scale-110">
-            <span class="option-text text-lg font-medium text-gray-800">فودافون كاش</span>
-          </label>
+    <!-- Modal لتأكيد الاختيار -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">تأكيد اختيار الباقة</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- سيتم ملء هذا القسم بالجافاسكريبت -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> إلغاء
+                    </button>
+                    <button type="button" class="btn btn-success" id="confirmSelect">
+                        <i class="fas fa-check me-1"></i> تأكيد الاختيار والمتابعة للدفع
+                    </button>
+                </div>
+            </div>
         </div>
-
-        <div id="instapayAction" class="payment-action hidden mt-6 text-center">
-          <a
-            href="https://ipn.eg/S/adelezaat8000/instapay/7bsz5E"
-            target="_blank"
-            class="inline-block px-6 py-3 bg-gradient-to-r from-green-500 to-green-700 text-white rounded-xl font-bold hover:-translate-y-1 hover:shadow-lg transition-all"
-          >
-            إجراء الدفع عبر انستا باي
-          </a>
-        </div>
-        <div id="vodafoneAction" class="payment-action hidden mt-6 text-center">
-          <p class="text-xl font-bold text-red-600">01000072951</p>
-          <div id="countdownTimer" class="hidden">03:00</div>
-          <p class="text-sm text-gray-600 mt-2">يرجى التحويل على هذا الرقم ثم إدخال رقم الهاتف المحول منه. بعد الضغط على متابعة، ستتم إعادة توجيهك إلى واتساب لإرسال التفاصيل. <span class="font-bold text-red-600">يرجى إرسال صورة إيصال التحويل في الواتساب بعد فتح المحادثة.</span></p>
-          <input
-            type="tel"
-            id="transferPhone"
-            class="w-full p-3 border-2 border-gray-300 rounded-xl text-lg focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200 transition-all mt-4"
-            placeholder="ادخل رقم الهاتف المحول منه"
-          >
-          <div id="transferPhoneError" class="error-message text-red-500 text-sm text-right mt-2 hidden">الرجاء إدخال رقم هاتف صحيح (مثال: 010xxxxxxxxxx)</div>
-        </div>
-
-        <button
-          id="continueBtn"
-          class="w-full mt-6 py-4 bg-gradient-to-r from-green-500 to-green-700 text-white rounded-xl font-bold text-lg hover:-translate-y-1 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          متابعة
-        </button>
-      </div>
     </div>
-  </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const boxes = document.querySelectorAll('.box');
-      const modal = document.getElementById('paymentModal');
-      const closeBtn = document.querySelector('.close');
-      const continueBtn = document.getElementById('continueBtn');
-      const instapayAction = document.getElementById('instapayAction');
-      const vodafoneAction = document.getElementById('vodafoneAction');
-      const paymentOptions = document.querySelectorAll('input[name="payment"]');
-      const pubgId = document.getElementById('pubgId');
-      const idError = document.getElementById('idError');
-      const transferPhone = document.getElementById('transferPhone');
-      const transferPhoneError = document.getElementById('transferPhoneError');
-      const countdownTimer = document.getElementById('countdownTimer');
+    <!-- Modal خيارات الدفع -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">إتمام عملية الدفع</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="mb-4">اختر طريقة الدفع</h5>
+                    <div class="payment-options">
+                        <div class="payment-option" id="instapayOption">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="instapayMethod" value="instapay">
+                                <label class="form-check-label fw-bold" for="instapayMethod">
+                                    <i class="fas fa-mobile-alt me-2"></i> الدفع عبر إنستاباي
+                                </label>
+                            </div>
+                            <div class="payment-details" id="instapayDetails">
+                                <div class="mt-3">
+                                    <label for="instapayUserName" class="form-label">الاسم الكامل</label>
+                                    <input type="text" class="form-control" id="instapayUserName">
+                                    
+                                    <label for="instapayUserPhone" class="form-label mt-3">رقم الهاتف المسجل في التطبيق</label>
+                                    <input type="tel" class="form-control" id="instapayUserPhone">
+                                    
+                                    <label for="instapaySenderAccount" class="form-label mt-3">الرقم المحول منه</label>
+                                    <input type="text" class="form-control" id="instapaySenderAccount">
+                                    
+                                    <div class="receipt-upload" id="instapayReceiptUploadArea">
+                                        <i class="fas fa-cloud-upload-alt fa-3x mb-3" style="color: #ccc;"></i>
+                                        <p>اسحب وأسقط صورة الإيصال هنا أو انقر للاختيار</p>
+                                        <input type="file" id="instapayReceiptImage" accept="image/*" style="display: none;">
+                                    </div>
+                                    <img id="instapayReceiptPreview" class="receipt-preview" alt="معاينة صورة الإيصال">
+                                    <button class="btn instapay-btn mt-3" id="instapayRedirect">
+                                        <i class="fas fa-external-link-alt me-2"></i> الانتقال إلى إنستاباي
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
-      let selectedPackage = '';
-      let timerInterval = null;
+                        <div class="payment-option" id="walletOption">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="walletMethod" value="wallet">
+                                <label class="form-check-label fw-bold" for="walletMethod">
+                                    <i class="fas fa-wallet me-2"></i> محفظة إلكترونية
+                                </label>
+                            </div>
+                            <div class="payment-details" id="walletDetails">
+                                <div class="wallet-instructions">
+                                    <p class="mb-1">الرجاء تحويل المبلغ إلى رقم المحفظة التالي:</p>
+                                    <div class="wallet-number-display" id="walletNumberDisplay">جاري تحميل رقم المحفظة...</div>
+                                </div>
+                                
+                                <div class="wallet-details">
+                                    <h6 class="fw-bold">رقم المحفظة:</h6>
+                                    <p class="wallet-number" id="walletNumberText">جاري تحميل رقم المحفظة...</p>
+                                </div>
+                                <div class="mt-3">
+                                    <label for="walletUserName" class="form-label">الاسم الكامل</label>
+                                    <input type="text" class="form-control" id="walletUserName">
+                                    
+                                    <label for="walletUserPhone" class="form-label mt-3">رقم الهاتف المسجل في التطبيق</label>
+                                    <input type="tel" class="form-control" id="walletUserPhone">
+                                    
+                                    <label for="walletSenderAccount" class="form-label mt-3">الرقم المحول منه</label>
+                                    <input type="text" class="form-control" id="walletSenderAccount">
+                                    
+                                    <div class="receipt-upload" id="receiptUploadArea">
+                                        <i class="fas fa-cloud-upload-alt fa-3x mb-3" style="color: #ccc;"></i>
+                                        <p>اسحب وأسقط صورة الإيصال هنا أو انقر للاختيار</p>
+                                        <input type="file" id="receiptImage" accept="image/*" style="display: none;">
+                                    </div>
+                                    <img id="receiptPreview" class="receipt-preview" alt="معاينة صورة الإيصال">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="completePayment">
+                        <i class="fas fa-check-circle me-1"></i> تأكيد الدفع
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- زر عائم للانتقال للأعلى -->
+    <div class="floating-btn" id="scrollToTop" title="انتقل إلى الأعلى">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <!-- منطقة التنبيهات -->
+    <div class="toast-container">
+        <div class="toast align-items-center text-white bg-success border-0" id="successToast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span id="toastMessage">تم تنفيذ العملية بنجاح</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
 
-      function startCountdown() {
-        clearInterval(timerInterval);
-        let timeLeft = 3 * 60; // 3 minutes in seconds
-        countdownTimer.classList.remove('hidden');
+    <!-- مكتبات JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
+    
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyA2W-T-6DIAls8BVCpLffAy8XsJeGnWZEQ",
+            authDomain: "admin-7fbae.firebaseapp.com",
+            databaseURL: "https://admin-7fbae-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "admin-7fbae",
+            storageBucket: "admin-7fbae.appspot.com",
+            messagingSenderId: "213477146533",
+            appId: "1:213477146533:web:67494bd3162bd62026324c",
+            measurementId: "G-CWMBGGG8S7"
+        };
 
-        timerInterval = setInterval(() => {
-          let minutes = Math.floor(timeLeft / 60);
-          let seconds = timeLeft % 60;
-          countdownTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-          timeLeft--;
-
-          if (timeLeft < 0) {
-            clearInterval(timerInterval);
-            countdownTimer.textContent = 'انتهى الوقت';
-            continueBtn.disabled = true;
-          }
-        }, 1000);
-      }
-
-      function resetCountdown() {
-        clearInterval(timerInterval);
-        countdownTimer.classList.add('hidden');
-        countdownTimer.textContent = '03:00';
-        continueBtn.disabled = false;
-      }
-
-      boxes.forEach(box => {
-        box.addEventListener('click', () => {
-          modal.classList.remove('hidden');
-          const ucAmount = box.querySelector('h3').textContent;
-          const price = box.querySelector('p').textContent;
-          selectedPackage = `${ucAmount} ${price}`.trim();
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        
+        // DOM elements
+        const packagesContainer = document.getElementById('cardsView');
+        const noPackagesMessage = document.getElementById('noPackagesMessage');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+        const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+        const modalBody = document.getElementById('modalBody');
+        const confirmSelectBtn = document.getElementById('confirmSelect');
+        const completePaymentBtn = document.getElementById('completePayment');
+        const viewCardsBtn = document.getElementById('viewCards');
+        const viewTableBtn = document.getElementById('viewTable');
+        const cardsView = document.getElementById('cardsView');
+        const tableView = document.getElementById('tableView');
+        const comparisonTableBody = document.getElementById('comparisonTableBody');
+        const scrollToTopBtn = document.getElementById('scrollToTop');
+        const successToast = new bootstrap.Toast(document.getElementById('successToast'));
+        const paymentOptions = document.querySelectorAll('.payment-option');
+        const instapayDetails = document.getElementById('instapayDetails');
+        const walletDetails = document.getElementById('walletDetails');
+        const walletNumberText = document.getElementById('walletNumberText');
+        const walletNumberDisplay = document.getElementById('walletNumberDisplay');
+        const receiptUploadArea = document.getElementById('receiptUploadArea');
+        const receiptImage = document.getElementById('receiptImage');
+        const receiptPreview = document.getElementById('receiptPreview');
+        const instapayReceiptUploadArea = document.getElementById('instapayReceiptUploadArea');
+        const instapayReceiptImage = document.getElementById('instapayReceiptImage');
+        const instapayReceiptPreview = document.getElementById('instapayReceiptPreview');
+        const instapayRedirectBtn = document.getElementById('instapayRedirect');
+        
+        // متغيرات
+        let allPackages = [];
+        let selectedPackageId = null;
+        let allFeatures = new Set();
+        let selectedPaymentMethod = null;
+        let receiptFile = null;
+        let instapayLink = null;
+        let walletNumber = null;
+        
+        // جلب تفاصيل المحفظة من Firebase
+        function fetchWalletDetails() {
+            const walletRef = database.ref('walletDetails');
+            
+            walletRef.once('value').then((snapshot) => {
+                if (snapshot.exists()) {
+                    const walletData = snapshot.val();
+                    walletNumber = walletData.walletNumber || "غير متوفر";
+                    instapayLink = walletData.instapayLink || null;
+                    
+                    // تحديث نص رقم المحفظة في المكانين
+                    walletNumberText.textContent = walletNumber;
+                    walletNumberDisplay.textContent = walletNumber;
+                    
+                    if (selectedPaymentMethod === 'wallet') {
+                        walletNumberText.textContent = walletNumber;
+                        walletNumberDisplay.textContent = walletNumber;
+                    }
+                } else {
+                    walletNumber = "لا يوجد رقم محفظة متاح حالياً";
+                    instapayLink = null;
+                    walletNumberText.textContent = walletNumber;
+                    walletNumberDisplay.textContent = walletNumber;
+                    
+                    if (selectedPaymentMethod === 'wallet') {
+                        walletNumberText.textContent = walletNumber;
+                        walletNumberDisplay.textContent = walletNumber;
+                    }
+                }
+            }).catch(error => {
+                console.error('Error fetching wallet details:', error);
+                walletNumber = "فشل الاتصال بقاعدة البيانات";
+                walletNumberText.textContent = walletNumber;
+                walletNumberDisplay.textContent = walletNumber;
+                
+                if (selectedPaymentMethod === 'wallet') {
+                    walletNumberText.textContent = walletNumber;
+                    walletNumberDisplay.textContent = walletNumber;
+                    showToast("تعذر جلب رقم المحفظة بسبب مشكلة في الاتصال", 'danger');
+                }
+            });
+        }
+        
+        // جلب الباقات من Firebase
+        function fetchPackages() {
+            const packagesRef = database.ref('packages');
+            
+            packagesRef.on('value', (snapshot) => {
+                allPackages = [];
+                allFeatures.clear();
+                
+                if (snapshot.exists()) {
+                    noPackagesMessage.style.display = 'none';
+                    
+                    snapshot.forEach((childSnapshot) => {
+                        const packageData = childSnapshot.val();
+                        const packageWithId = {
+                            id: childSnapshot.key,
+                            ...packageData
+                        };
+                        allPackages.push(packageWithId);
+                        
+                        if (packageData.features) {
+                            packageData.features.forEach(feature => {
+                                allFeatures.add(feature);
+                            });
+                        }
+                    });
+                    
+                    displayPackages(allPackages);
+                    updateComparisonTable(allPackages);
+                } else {
+                    noPackagesMessage.style.display = 'block';
+                    tableView.style.display = 'none';
+                }
+            }, (error) => {
+                console.error('Error fetching packages:', error);
+                noPackagesMessage.style.display = 'block';
+                tableView.style.display = 'none';
+                showToast("تعذر جلب الباقات بسبب مشكلة في الاتصال", 'danger');
+            });
+        }
+        
+        // عرض الباقات كبطاقات
+        function displayPackages(packages) {
+            packagesContainer.innerHTML = '';
+            
+            if (packages.length === 0) {
+                noPackagesMessage.style.display = 'block';
+                return;
+            } else {
+                noPackagesMessage.style.display = 'none';
+            }
+            
+            packages.forEach((pkg, index) => {
+                const packageCard = document.createElement('div');
+                packageCard.className = 'col-md-4';
+                
+                const isPopular = pkg.isPopular || (packages.length >= 3 && index === Math.floor(packages.length / 2));
+                const isRecommended = pkg.isRecommended || (index === packages.length - 1);
+                
+                packageCard.innerHTML = `
+                    <div class="card package-card h-100">
+                        ${isPopular ? '<span class="popular-badge">الأكثر شيوعاً</span>' : ''}
+                        ${isRecommended ? '<span class="recommended-badge">موصى بها</span>' : ''}
+                        <div class="package-header">
+                            <h3>${pkg.name}</h3>
+                            <div class="package-price">${pkg.price}</div>
+                            ${pkg.duration ? `<p>${pkg.duration}</p>` : ''}
+                        </div>
+                        <div class="card-body">
+                            ${pkg.description ? `<p class="text-muted mb-3">${pkg.description}</p>` : ''}
+                            <ul class="package-features">
+                                ${pkg.features ? pkg.features.map(feature => `
+                                    <li><i class="fas fa-check feature-icon"></i>${feature}</li>
+                                `).join('') : '<li>لا توجد مميزات</li>'}
+                            </ul>
+                            <button class="btn btn-select" data-package-id="${pkg.id}">
+                                <i class="fas fa-shopping-cart me-2"></i> اختر الباقة
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                packagesContainer.appendChild(packageCard);
+            });
+            
+            document.querySelectorAll('.btn-select').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    selectedPackageId = this.getAttribute('data-package-id');
+                    const selectedPackage = allPackages.find(pkg => pkg.id === selectedPackageId);
+                    
+                    showConfirmationModal(selectedPackage);
+                });
+            });
+        }
+        
+        // عرض نافذة تأكيد الاختيار
+        function showConfirmationModal(pkg) {
+            modalBody.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4 class="mb-3">${pkg.name}</h4>
+                        <div class="d-flex align-items-center mb-3">
+                            <h3 class="text-primary mb-0">${pkg.price} جنيه</h3>
+                            ${pkg.duration ? `<span class="ms-3 badge bg-secondary">${pkg.duration}</span>` : ''}
+                        </div>
+                        ${pkg.description ? `<p class="text-muted">${pkg.description}</p>` : ''}
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="mb-3">مميزات الباقة:</h5>
+                        <ul class="list-group">
+                            ${pkg.features ? pkg.features.map(feature => `
+                                <li class="list-group-item d-flex align-items-center">
+                                    <i class="fas fa-check text-success me-2"></i> ${feature}
+                                </li>
+                            `).join('') : '<li class="list-group-item">لا توجد مميزات</li>'}
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            confirmModal.show();
+        }
+        
+        // تحديث جدول المقارنة
+        function updateComparisonTable(packages) {
+            if (packages.length === 0) return;
+            
+            comparisonTableBody.innerHTML = '';
+            
+            const thead = document.querySelector('.comparison-table thead tr');
+            thead.innerHTML = '<th>الميزة</th>';
+            
+            packages.forEach(pkg => {
+                thead.innerHTML += `
+                    <th>
+                        <div class="fw-bold">${pkg.name}</div>
+                        <div class="text-primary fw-bold">${pkg.price} جنيه</div>
+                        ${pkg.duration ? `<small class="text-muted">${pkg.duration}</small>` : ''}
+                    </th>
+                `;
+            });
+            
+            allFeatures.forEach(feature => {
+                const row = document.createElement('tr');
+                let rowContent = `<td class="feature-name">${feature}</td>`;
+                
+                packages.forEach(pkg => {
+                    const hasFeature = pkg.features && pkg.features.includes(feature);
+                    rowContent += `
+                        <td>
+                            <i class="fas ${hasFeature ? 'fa-check text-success' : 'fa-times text-danger'}"></i>
+                        </td>
+                    `;
+                });
+                
+                row.innerHTML = rowContent;
+                comparisonTableBody.appendChild(row);
+            });
+        }
+        
+        // إعداد خيارات الدفع
+        function setupPaymentOptions() {
+            paymentOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    paymentOptions.forEach(opt => {
+                        opt.classList.remove('active');
+                        const details = opt.querySelector('.payment-details');
+                        if (details) details.style.display = 'none';
+                    });
+                    
+                    this.classList.add('active');
+                    
+                    const radio = this.querySelector('input[type="radio"]');
+                    if (radio) {
+                        radio.checked = true;
+                        selectedPaymentMethod = radio.value;
+                        
+                        if (selectedPaymentMethod === 'instapay') {
+                            instapayDetails.style.display = 'block';
+                            walletDetails.style.display = 'none';
+                            instapayReceiptUploadArea.style.display = 'block';
+                            instapayReceiptPreview.style.display = 'none';
+                        } else if (selectedPaymentMethod === 'wallet') {
+                            walletDetails.style.display = 'block';
+                            instapayDetails.style.display = 'none';
+                            receiptUploadArea.style.display = 'block';
+                            receiptPreview.style.display = 'none';
+                            walletNumberText.textContent = walletNumber || "جاري تحميل رقم المحفظة...";
+                            walletNumberDisplay.textContent = walletNumber || "جاري تحميل رقم المحفظة...";
+                            if (!walletNumber) fetchWalletDetails(); // إعادة المحاولة إذا لم يتم جلب الرقم بعد
+                        }
+                    }
+                });
+            });
+            
+            receiptUploadArea.addEventListener('click', function() {
+                receiptImage.click();
+            });
+            
+            receiptImage.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    receiptFile = e.target.files[0];
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        receiptPreview.src = event.target.result;
+                        receiptPreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(receiptFile);
+                }
+            });
+            
+            receiptUploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                receiptUploadArea.style.borderColor = 'var(--primary-color)';
+            });
+            
+            receiptUploadArea.addEventListener('dragleave', function() {
+                receiptUploadArea.style.borderColor = '#ddd';
+            });
+            
+            receiptUploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                receiptUploadArea.style.borderColor = '#ddd';
+                
+                if (e.dataTransfer.files.length > 0) {
+                    receiptFile = e.dataTransfer.files[0];
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        receiptPreview.src = event.target.result;
+                        receiptPreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(receiptFile);
+                }
+            });
+            
+            instapayReceiptUploadArea.addEventListener('click', function() {
+                instapayReceiptImage.click();
+            });
+            
+            instapayReceiptImage.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    receiptFile = e.target.files[0];
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        instapayReceiptPreview.src = event.target.result;
+                        instapayReceiptPreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(receiptFile);
+                }
+            });
+            
+            instapayReceiptUploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                instapayReceiptUploadArea.style.borderColor = 'var(--primary-color)';
+            });
+            
+            instapayReceiptUploadArea.addEventListener('dragleave', function() {
+                instapayReceiptUploadArea.style.borderColor = '#ddd';
+            });
+            
+            instapayReceiptUploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                instapayReceiptUploadArea.style.borderColor = '#ddd';
+                
+                if (e.dataTransfer.files.length > 0) {
+                    receiptFile = e.dataTransfer.files[0];
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        instapayReceiptPreview.src = event.target.result;
+                        instapayReceiptPreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(receiptFile);
+                }
+            });
+            
+            instapayRedirectBtn.addEventListener('click', function() {
+                if (instapayLink) {
+                    window.open(instapayLink, '_blank');
+                } else {
+                    showToast('رابط إنستاباي غير متوفر حالياً', 'danger');
+                }
+            });
+        }
+        
+        // تأكيد عملية الدفع
+        function completePayment() {
+            let userName, userPhone, senderAccount;
+            
+            if (selectedPaymentMethod === 'instapay') {
+                userName = document.getElementById('instapayUserName').value;
+                userPhone = document.getElementById('instapayUserPhone').value;
+                senderAccount = document.getElementById('instapaySenderAccount').value;
+            } else if (selectedPaymentMethod === 'wallet') {
+                userName = document.getElementById('walletUserName').value;
+                userPhone = document.getElementById('walletUserPhone').value;
+                senderAccount = document.getElementById('walletSenderAccount').value;
+            }
+            
+            if (!userName || !userPhone || !senderAccount) {
+                showToast('الرجاء إدخال جميع الحقول المطلوبة', 'danger');
+                return;
+            }
+            
+            if (!receiptFile) {
+                showToast('الرجاء إرفاق صورة الإيصال', 'danger');
+                return;
+            }
+            
+            const paymentData = {
+                packageId: selectedPackageId,
+                packageName: allPackages.find(p => p.id === selectedPackageId).name,
+                userName: userName,
+                userPhone: userPhone,
+                senderAccount: senderAccount,
+                paymentMethod: selectedPaymentMethod,
+                paymentDate: firebase.database.ServerValue.TIMESTAMP,
+                status: 'pending'
+            };
+            
+            const paymentsRef = database.ref('payments');
+            const newPaymentRef = paymentsRef.push();
+            
+            newPaymentRef.set(paymentData)
+                .then(() => {
+                    if (receiptFile) {
+                        const storageRef = firebase.storage().ref(`paymentReceipts/${newPaymentRef.key}`);
+                        const uploadTask = storageRef.put(receiptFile);
+                        
+                        uploadTask.on('state_changed', 
+                            (snapshot) => {},
+                            (error) => {
+                                console.error('Error uploading receipt:', error);
+                                showToast('فشل رفع صورة الإيصال، حاول مرة أخرى', 'danger');
+                            }, 
+                            () => {
+                                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                                    newPaymentRef.update({
+                                        receiptImage: downloadURL
+                                    }).then(() => {
+                                        showToast('تم رفع صورة الإيصال بنجاح');
+                                    }).catch(error => {
+                                        console.error('Error updating payment with receipt URL:', error);
+                                        showToast('حدث خطأ أثناء حفظ رابط الإيصال', 'danger');
+                                    });
+                                }).catch(error => {
+                                    console.error('Error getting download URL:', error);
+                                    showToast('حدث خطأ أثناء استرجاع رابط الإيصال', 'danger');
+                                });
+                            }
+                        );
+                    }
+                    
+                    showToast('تم إرسال طلب الدفع بنجاح، سيتم مراجعته من قبل الإدارة');
+                    paymentModal.hide();
+                    confirmModal.hide();
+                    
+                    if (selectedPaymentMethod === 'instapay') {
+                        document.getElementById('instapayUserName').value = '';
+                        document.getElementById('instapayUserPhone').value = '';
+                        document.getElementById('instapaySenderAccount').value = '';
+                        instapayReceiptPreview.style.display = 'none';
+                    } else if (selectedPaymentMethod === 'wallet') {
+                        document.getElementById('walletUserName').value = '';
+                        document.getElementById('walletUserPhone').value = '';
+                        document.getElementById('walletSenderAccount').value = '';
+                        receiptPreview.style.display = 'none';
+                    }
+                    receiptFile = null;
+                })
+                .catch(error => {
+                    console.error('Error saving payment:', error);
+                    showToast('حدث خطأ أثناء إرسال طلب الدفع', 'danger');
+                });
+        }
+        
+        // وظيفة البحث
+        function showToast(message, type = 'success') {
+            const toastElement = document.getElementById('successToast');
+            if (!toastElement) {
+                console.error('Toast element not found');
+                return;
+            }
+            
+            const toastMessage = document.getElementById('toastMessage');
+            if (!toastMessage) {
+                console.error('Toast message element not found');
+                return;
+            }
+            
+            toastMessage.textContent = message;
+            
+            if (type === 'success') {
+                toastElement.className = 'toast align-items-center text-white bg-success border-0';
+            } else if (type === 'danger') {
+                toastElement.className = 'toast align-items-center text-white bg-danger border-0';
+            }
+            
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }
+        
+        function searchPackages() {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            if (searchTerm === '') {
+                displayPackages(allPackages);
+                updateComparisonTable(allPackages);
+                return;
+            }
+            
+            const filteredPackages = allPackages.filter(pkg => 
+                pkg.name.toLowerCase().includes(searchTerm) || 
+                (pkg.description && pkg.description.toLowerCase().includes(searchTerm)) ||
+                (pkg.features && pkg.features.some(feature => feature.toLowerCase().includes(searchTerm)))
+            );
+            
+            displayPackages(filteredPackages);
+            updateComparisonTable(filteredPackages);
+        }
+        
+        // تصفية الباقات
+        function filterPackages(filter) {
+            let filteredPackages = [...allPackages];
+            
+            switch(filter) {
+                case 'low':
+                    filteredPackages.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+                    break;
+                case 'high':
+                    filteredPackages.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+                    break;
+                case 'recommended':
+                    filteredPackages = filteredPackages.filter(pkg => pkg.isRecommended);
+                    if (filteredPackages.length === 0) {
+                        filteredPackages = [allPackages[allPackages.length - 1]];
+                    }
+                    break;
+                default:
+                    break;
+            }
+            
+            displayPackages(filteredPackages);
+            updateComparisonTable(filteredPackages);
+        }
+        
+        // أحداث DOM
+        searchBtn.addEventListener('click', searchPackages);
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') searchPackages();
         });
-      });
-
-      closeBtn.addEventListener('click', () => {
-        modal.classList.add('hidden');
-        resetForm();
-      });
-
-      window.addEventListener('click', (event) => {
-        if (event.target === modal) {
-          modal.classList.add('hidden');
-          resetForm();
-        }
-      });
-
-      paymentOptions.forEach(option => {
-        option.addEventListener('change', () => {
-          if (option.value === 'instapay') {
-            instapayAction.classList.remove('hidden');
-            vodafoneAction.classList.add('hidden');
-            resetCountdown();
-          } else if (option.value === 'ewallet') {
-            instapayAction.classList.add('hidden');
-            vodafoneAction.classList.remove('hidden');
-            startCountdown();
-          } else {
-            instapayAction.classList.add('hidden');
-            vodafoneAction.classList.add('hidden');
-            resetCountdown();
-          }
+        
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                filterPackages(this.getAttribute('data-filter'));
+            });
         });
-      });
-
-      continueBtn.addEventListener('click', () => {
-        const selectedPayment = document.querySelector('input[name="payment"]:checked');
-        const phoneNumber = pubgId.value.trim();
-        const transferPhoneNumber = transferPhone.value.trim();
-        const phonePattern = /^01[0-2|5]{1}[0-9]{8}$/;
-
-        if (!phonePattern.test(phoneNumber)) {
-          idError.classList.remove('hidden');
-          return;
-        } else {
-          idError.classList.add('hidden');
-        }
-
-        if (!selectedPayment) {
-          idError.textContent = 'الرجاء اختيار وسيلة دفع';
-          idError.classList.remove('hidden');
-          return;
-        }
-
-        if (selectedPayment.value === 'ewallet' && !phonePattern.test(transferPhoneNumber)) {
-          transferPhoneError.classList.remove('hidden');
-          return;
-        } else {
-          transferPhoneError.classList.add('hidden');
-        }
-
-        continueBtn.disabled = true;
-        continueBtn.textContent = 'جاري المعالجة...';
-
-        const paymentMethod = selectedPayment.value === 'instapay' ? 'انستا باي' : 'فودافون كاش';
-        let message = `مرحباً، أود BNB:\n${selectedPackage}\nرقم هاتفي: ${phoneNumber}\nوسيلة الدفع: ${paymentMethod}`;
-        if (selectedPayment.value === 'ewallet') {
-          message += `\nرقم الهاتف المحول منه: ${transferPhoneNumber}\n⚠️ `;
-        }
-        const whatsappUrl = `https://wa.me/+201000072951?text=${encodeURIComponent(message)}`;
-
-        setTimeout(() => {
-          window.open(whatsappUrl, '_blank');
-          modal.classList.add('hidden');
-          resetForm();
-        }, 500);
-      });
-
-      function resetForm() {
-        pubgId.value = '';
-        transferPhone.value = '';
-        idError.classList.add('hidden');
-        transferPhoneError.classList.add('hidden');
-        instapayAction.classList.add('hidden');
-        vodafoneAction.classList.add('hidden');
-        paymentOptions.forEach(option => (option.checked = false));
-        continueBtn.disabled = false;
-        continueBtn.textContent = 'متابعة';
-        resetCountdown();
-      }
-    });
-  </script>
+        
+        viewCardsBtn.addEventListener('click', function() {
+            viewCardsBtn.classList.add('active');
+            viewTableBtn.classList.remove('active');
+            cardsView.style.display = 'flex';
+            tableView.style.display = 'none';
+        });
+        
+        viewTableBtn.addEventListener('click', function() {
+            viewTableBtn.classList.add('active');
+            viewCardsBtn.classList.remove('active');
+            tableView.style.display = 'block';
+            cardsView.style.display = 'none';
+        });
+        
+        confirmSelectBtn.addEventListener('click', function() {
+            confirmModal.hide();
+            paymentModal.show();
+        });
+        
+        completePaymentBtn.addEventListener('click', completePayment);
+        
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        window.addEventListener('scroll', () => {
+            scrollToTopBtn.style.display = window.pageYOffset > 300 ? 'flex' : 'none';
+        });
+        
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchPackages();
+            fetchWalletDetails();
+            viewCardsBtn.classList.add('active');
+            setupPaymentOptions();
+        });
+    </script>
 </body>
 </html>
